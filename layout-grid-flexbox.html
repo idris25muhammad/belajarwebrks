@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kombinasi Grid dan Flexbox</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ===== GRID: struktur besar halaman ===== */
+    .layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+      min-height: 100vh;
+      gap: 12px;
+      padding: 12px;
+      background-color: #f4f4f4;
+    }
+
+    .header  { grid-area: header; }
+    .sidebar { grid-area: sidebar; background-color: #1d9e75; color: white; padding: 16px; border-radius: 8px; }
+    .main    { grid-area: main; background-color: #ffffff; padding: 16px; border-radius: 8px; border: 1px solid #ddd; }
+    .footer  { grid-area: footer; background-color: #444441; color: white; padding: 16px; border-radius: 8px; text-align: center; }
+
+    /* ===== FLEXBOX: navbar di dalam header ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: darkblue;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+    }
+
+    .header .logo {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .header .menu {
+      display: flex;
+      gap: 16px;
+    }
+
+    .header .login {
+      background-color: white;
+      color: darkblue;
+      padding: 6px 14px;
+      border-radius: 4px;
+    }
+
+    /* ===== FLEXBOX: kartu sejajar di dalam main ===== */
+    .cards {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .card {
+      flex: 1 1 150px;
+      background-color: #d85a30;
+      color: white;
+      padding: 16px;
+      border-radius: 6px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layout">
+
+    <!-- Header: Grid area, isinya ditata pakai Flexbox -->
+    <div class="header">
+      <div class="logo">Logo</div>
+      <div class="menu">
+        <span>Beranda</span>
+        <span>Tentang</span>
+        <span>Kontak</span>
+      </div>
+      <div class="login">Login</div>
+    </div>
+
+    <!-- Sidebar: Grid area -->
+    <div class="sidebar">
+      <p>Sidebar</p>
+    </div>
+
+    <!-- Main: Grid area, isinya ditata pakai Flexbox untuk kartu -->
+    <div class="main">
+      <h2>Konten Utama</h2>
+      <p>Bagian ini diatur Grid sebagai satu area, tapi kartu di dalamnya ditata pakai Flexbox.</p>
+      <div class="cards">
+        <div class="card">Kartu 1</div>
+        <div class="card">Kartu 2</div>
+        <div class="card">Kartu 3</div>
+      </div>
+    </div>
+
+    <!-- Footer: Grid area -->
+    <div class="footer">
+      Footer
+    </div>
+
+  </div>
+
+</body>
+</html>
