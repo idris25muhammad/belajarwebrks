@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh Event Handling - Bubbling dan Delegation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      padding: 24px;
+      background-color: #f4f4f4;
+    }
+
+    section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+    }
+
+    /* Struktur bersarang: outer > middle > inner */
+    .outer {
+      background-color: #7f77dd;
+      color: white;
+      padding: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .middle {
+      background-color: #1d9e75;
+      padding: 24px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .inner {
+      background-color: #d85a30;
+      padding: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    #log {
+      margin-top: 16px;
+      background: #222;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 12px;
+      border-radius: 6px;
+      height: 140px;
+      overflow-y: auto;
+    }
+
+    #log p {
+      margin: 2px 0;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 4px;
+      background: #444;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Struktur untuk contoh event delegation */
+    ul {
+      list-style: none;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    li {
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    li:hover {
+      background-color: #eef;
+    }
+  </style>
+</head>
+<body>
+
+  <section>
+    <h2>1. Event bubbling (elemen bersarang)</h2>
+    <p>Klik kotak paling dalam (coral), perhatikan urutan log muncul dari dalam ke luar.</p>
+
+    <div class="outer" id="outer">
+      Outer
+      <div class="middle" id="middle">
+        Middle
+        <div class="inner" id="inner">
+          Inner (klik saya)
+        </div>
+      </div>
+    </div>
+
+    <div id="log"></div>
+    <button id="clearLog">Bersihkan log</button>
+  </section>
+
+  <section>
+    <h2>2. Event delegation (daftar dinamis)</h2>
+    <p>Klik salah satu item, atau tambah item baru lalu klik item itu juga tetap berfungsi.</p>
+
+    <ul id="itemList">
+      <li>Item pertama</li>
+      <li>Item kedua</li>
+      <li>Item ketiga</li>
+    </ul>
+
+    <button id="addItem">Tambah item baru</button>
+  </section>
+
+  <script>
+    // ===== 1. Event bubbling =====
+    const outer = document.getElementById('outer');
+    const middle = document.getElementById('middle');
+    const inner = document.getElementById('inner');
+    const log = document.getElementById('log');
+
+    function tulisLog(pesan) {
+      const p = document.createElement('p');
+      p.textContent = pesan;
+      log.appendChild(p);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    inner.addEventListener('click', function(event) {
+      tulisLog('Inner diklik (target: ' + event.target.id + ')');
+    });
+
+    middle.addEventListener('click', function(event) {
+      tulisLog('Middle kena klik juga (karena bubbling)');
+    });
+
+    outer.addEventListener('click', function(event) {
+      tulisLog('Outer kena klik juga (karena bubbling)');
+    });
+
+    document.getElementById('clearLog').addEventListener('click', function() {
+      log.innerHTML = '';
+    });
+
+    // ===== 2. Event delegation =====
+    const itemList = document.getElementById('itemList');
+
+    // Satu listener di parent (ul), bukan di setiap li
+    itemList.addEventListener('click', function(event) {
+      if (event.target.tagName === 'LI') {
+        alert('Anda mengklik: ' + event.target.textContent);
+      }
+    });
+
+    let jumlahItem = 3;
+    document.getElementById('addItem').addEventListener('click', function() {
+      jumlahItem++;
+      const li = document.createElement('li');
+      li.textContent = 'Item baru ke-' + jumlahItem;
+      itemList.appendChild(li);
+      // Tidak perlu addEventListener lagi di li baru ini,
+      // karena listener di parent (itemList) tetap menangkapnya lewat bubbling
+    });
+  </script>
+
+</body>
+</html>
