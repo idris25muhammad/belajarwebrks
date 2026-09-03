@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh Event Handling - Validasi Input</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      padding: 24px;
+      background-color: #f4f4f4;
+    }
+
+    section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input.error {
+      border-color: #d85a30;
+      background-color: #faece7;
+    }
+
+    input.valid {
+      border-color: #1d9e75;
+      background-color: #e1f5ee;
+    }
+
+    .error-msg {
+      color: #d85a30;
+      font-size: 13px;
+      margin-top: 4px;
+      min-height: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #1d9e75;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background: #0f6e56;
+    }
+
+    #successMsg {
+      margin-top: 16px;
+      padding: 12px;
+      background: #e1f5ee;
+      color: #085041;
+      border-radius: 6px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <section>
+    <h2>Form Registrasi</h2>
+    <form id="registerForm" novalidate>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        <div class="error-msg" id="usernameError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email">
+        <div class="error-msg" id="emailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        <div class="error-msg" id="passwordError"></div>
+      </div>
+
+      <button type="submit">Daftar</button>
+    </form>
+
+    <div id="successMsg">Registrasi berhasil</div>
+  </section>
+
+  <script>
+    const form = document.getElementById('registerForm');
+
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+
+    const usernameError = document.getElementById('usernameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+
+    // ===== Fungsi validasi tiap field =====
+    function validateUsername() {
+      const value = username.value.trim();
+      if (value.length < 4) {
+        setError(username, usernameError, 'Username minimal 4 karakter');
+        return false;
+      }
+      setValid(username, usernameError);
+      return true;
+    }
+
+    function validateEmail() {
+      const value = email.value.trim();
+      const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!pattern.test(value)) {
+        setError(email, emailError, 'Format email tidak valid');
+        return false;
+      }
+      setValid(email, emailError);
+      return true;
+    }
+
+    function validatePassword() {
+      const value = password.value;
+      if (value.length < 8) {
+        setError(password, passwordError, 'Password minimal 8 karakter');
+        return false;
+      }
+      setValid(password, passwordError);
+      return true;
+    }
+
+    function setError(input, errorEl, pesan) {
+      input.classList.remove('valid');
+      input.classList.add('error');
+      errorEl.textContent = pesan;
+    }
+
+    function setValid(input, errorEl) {
+      input.classList.remove('error');
+      input.classList.add('valid');
+      errorEl.textContent = '';
+    }
+
+    // ===== Event: validasi real-time saat pengguna mengetik =====
+    username.addEventListener('input', validateUsername);
+    email.addEventListener('input', validateEmail);
+    password.addEventListener('input', validatePassword);
+
+    // ===== Event: validasi ulang saat submit =====
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // mencegah reload halaman
+
+      const isUsernameValid = validateUsername();
+      const isEmailValid = validateEmail();
+      const isPasswordValid = validatePassword();
+
+      const successMsg = document.getElementById('successMsg');
+
+      if (isUsernameValid && isEmailValid && isPasswordValid) {
+        successMsg.style.display = 'block';
+      } else {
+        successMsg.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
